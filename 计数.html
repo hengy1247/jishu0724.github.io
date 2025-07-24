@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Worker 计数示例</title>
+</head>
+<body>
+    <h1>Web Worker 计数器</h1>
+    <button id="startButton">开始计数</button>
+    <button id="stopButton">停止计数</button>
+    <div id="result"></div>
+
+    <script>
+        let worker;
+
+        document.getElementById('startButton').onclick = () => {
+            // 创建一个新的 Web Worker
+            worker = new Worker('worker.js');
+
+            // 监听来自 Worker 的消息
+            worker.onmessage = (event) => {
+                document.getElementById('result').innerText = event.data;
+            };
+
+            // 向 Worker 发送开始计数的指令
+            worker.postMessage('start');
+        };
+
+        document.getElementById('stopButton').onclick = () => {
+            // 停止 Worker
+            if (worker) {
+                worker.terminate();
+                worker = null;
+                document.getElementById('result').innerText = '计数已停止';
+            }
+        };
+    </script>
+</body>
+</html>
